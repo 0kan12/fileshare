@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ShareFile</title>
+    <title>FastIMG</title>
     <style>
         body {
             display: flex;
@@ -27,43 +27,95 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        #fileList {
+            text-align: left;
+        }
+
+        #fileList ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #fileList li {
+            margin-bottom: 5px;
+        }
+
+        #contentContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #infoContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
 <body>
 
-    <h2>Yüklenen ZIP Dosyası</h2>
+    <h2>FastIMG</h2>
 
-    <a id="downloadButton" href="" download="yuklenen_dosya.zip">ZIP Dosyasını İndir</a>
+    <div id="contentContainer">
+        <div id="infoContainer">
+            <p id="infoText">Yüklenen ZIP Dosyası</p>
+            <a id="downloadButton" href="" download="yuklenen_dosya.zip">ZIP Dosyasını İndir</a>
+        </div>
+
+        <div id="fileList"></div>
+    </div>
+
     <footer style="position: fixed; bottom: 0; right: 0; background: #f1f1f1; padding: 10px;">
         <div>Okan tarafından yapıldı.</div>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var pathname = window.location.pathname;
             var kisaltilmisBlobId = pathname.split('/').pop();
             var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
-            
-            fetch(apiUrl)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Hata: ' + response.statusText);
-                }
-            })
-            .then(data => {
-                var base64Content = data.content;
-                
-                var downloadButton = document.getElementById('downloadButton');
-                downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                downloadButton.onclick = function() {
-                    downloadButton.download = 'sharefile.zip';
-                };
-            })
-            .catch(error => {
-                console.error("Hata:", error);
-            });
+
+            if (pathname.includes('/info/')) {
+                fetch(apiUrl)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Hata: ' + response.statusText);
+                    }
+                })
+                .then(data => {
+                    var base64Content = data.content;
+
+                    JSZip.loadAsync(base64Content, { base64: true })
+                        .then(function(zip) {
+                            var fileList = document.getElementById('fileList');
+                            var ul = document.createElement('ul');
+
+                            zip.forEach(function (relativePath, zipEntry) {
+                                var li = document.createElement('li');
+                                li.textContent = relativePath;
+                                ul.appendChild(li);
+                            });
+
+                            fileList.appendChild(ul);
+                        })
+                        .catch(function(error) {
+                            console.error("Hata:", error);
+                        });
+                })
+                .catch(error => {
+                    console.error("Hata:", error);
+                });
+            } else if (pathname.includes('/share/')) {
+                var infoContainer = document.getElementById('infoContainer');
+                infoContainer.style.display = 'none'; // Dosya içeriği görünmeyecek
+            }
         });
     </script>
 
