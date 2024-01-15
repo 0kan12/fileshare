@@ -105,22 +105,35 @@
     
                     JSZip.loadAsync(base64Content, { base64: true })
                         .then(function(zip) {
+                            var promises = [];
+
                             zip.forEach(function(relativePath, zipEntry) {
                                 var li = document.createElement('li');
                                 li.textContent = relativePath;
                                 li.addEventListener('click', function() {
                                     // Open file content in a new tab
-                                    var fileContent = zip.files[relativePath].async('blob');
-                                    var blobUrl = URL.createObjectURL(fileContent);
-                                    window.open(blobUrl, '_blank');
+                                    var promise = zip.files[relativePath].async('string')
+                                        .then(function(fileContent) {
+                                            var blob = new Blob([fileContent], { type: 'text/plain' });
+                                            var blobUrl = URL.createObjectURL(blob);
+                                            window.open(blobUrl, '_blank');
+                                        });
+
+                                    promises.push(promise);
                                 });
                                 ul.appendChild(li);
                             });
-    
-                            // Set the download attribute directly
-                            downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                            downloadButton.download = 'yuklenen_dosya.zip';
-    
+
+                            // Wait for all promises to resolve before updating downloadButton
+                            Promise.all(promises)
+                                .then(function() {
+                                    // Set the download attribute directly
+                                    downloadButton.href = `data:application/zip;base64,${base64Content}`;
+                                    downloadButton.download = 'yuklenen_dosya.zip';
+                                })
+                                .catch(function(error) {
+                                    console.error("Hata:", error);
+                                });
                         })
                         .catch(function(error) {
                             console.error("Hata:", error);
