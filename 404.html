@@ -110,8 +110,9 @@
                                 li.textContent = relativePath;
                                 li.addEventListener('click', function() {
                                     // Open file content in a new tab
-                                    var fileContent = zip.files[relativePath].async('string');
-                                    window.open('data:text/plain;charset=utf-8,' + encodeURIComponent(fileContent), '_blank');
+                                    var fileContent = zip.files[relativePath].async('blob');
+                                    var blobUrl = URL.createObjectURL(fileContent);
+                                    window.open(blobUrl, '_blank');
                                 });
                                 ul.appendChild(li);
                             });
