@@ -91,7 +91,7 @@
             var downloadButton = document.getElementById('downloadButton');
             var fileList = document.getElementById('fileList');
             var ul = fileList.querySelector('ul');
-            document.getElementById("info1").href=kisaltilmisBlobId
+            document.getElementById("info1").href=`/info/${kisaltilmisBlobId}`
             if (pathname.includes('/info/')) {
                 fetch(apiUrl)
                 .then(response => {
