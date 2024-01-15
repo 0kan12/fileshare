@@ -58,7 +58,7 @@
                 var downloadButton = document.getElementById('downloadButton');
                 downloadButton.href = `data:application/zip;base64,${base64Content}`;
                 downloadButton.onclick = function() {
-                    downloadButton.download = 'yuklenen_dosya.zip';
+                    downloadButton.download = 'sharefile.zip';
                 };
             })
             .catch(error => {
