@@ -69,7 +69,6 @@
         <div id="infoContainer">
             <p id="infoText">Yüklenen ZIP Dosyası</p>
             <a id="downloadButton" href="" download="yuklenen_dosya.zip">ZIP Dosyasını İndir</a>
-            <a id="info1" href="" >Dosya içeriği</a>
         </div>
 
         <div id="fileList">
@@ -91,9 +90,9 @@
             var downloadButton = document.getElementById('downloadButton');
             var fileList = document.getElementById('fileList');
             var ul = fileList.querySelector('ul');
-            document.getElementById("info1").href=`/info/${kisaltilmisBlobId}`
-            if (pathname.includes('/info/')) {
-                fetch(apiUrl)
+            document.getElementById("info1").href = `/info/${kisaltilmisBlobId}`;
+    
+            fetch(apiUrl)
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -103,21 +102,19 @@
                 })
                 .then(data => {
                     var base64Content = data.content;
-
+    
                     JSZip.loadAsync(base64Content, { base64: true })
                         .then(function(zip) {
-                            zip.forEach(function (relativePath, zipEntry) {
+                            zip.forEach(function(relativePath, zipEntry) {
                                 var li = document.createElement('li');
                                 li.textContent = relativePath;
                                 ul.appendChild(li);
                             });
-
+    
+                            // Set the download attribute directly
                             downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                            
-                            downloadButton.onclick = function() {
-                                downloadButton.download = 'yuklenen_dosya.zip';
-                            };
-
+                            downloadButton.download = 'yuklenen_dosya.zip';
+    
                             fileList.style.display = 'block';
                         })
                         .catch(function(error) {
@@ -127,12 +124,9 @@
                 .catch(error => {
                     console.error("Hata:", error);
                 });
-            } else if (pathname.includes('/share/')) {
-                var infoContainer = document.getElementById('infoContainer');
-                infoContainer.style.display = 'none'; // Dosya içeriği görünmeyecek
-            }
         });
     </script>
+    
 
 </body>
 </html>
