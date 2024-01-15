@@ -41,6 +41,8 @@
 
         #fileList li {
             margin-bottom: 5px;
+            cursor: pointer;
+            color: blue;
         }
 
         #contentContainer {
@@ -106,6 +108,11 @@
                             zip.forEach(function(relativePath, zipEntry) {
                                 var li = document.createElement('li');
                                 li.textContent = relativePath;
+                                li.addEventListener('click', function() {
+                                    // Open file content in a new tab
+                                    var fileContent = zip.files[relativePath].async('string');
+                                    window.open('data:text/plain;charset=utf-8,' + encodeURIComponent(fileContent), '_blank');
+                                });
                                 ul.appendChild(li);
                             });
     
