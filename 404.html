@@ -89,7 +89,6 @@
             var downloadButton = document.getElementById('downloadButton');
             var fileList = document.getElementById('fileList');
             var ul = fileList.querySelector('ul');
-            document.getElementById("info1").href = `/info/${kisaltilmisBlobId}`;
     
             fetch(apiUrl)
                 .then(response => {
@@ -112,9 +111,7 @@
     
                             // Set the download attribute directly
                             downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                            downloadButton.onclick = function() {
-                                downloadButton.download = 'yuklenen_dosya.zip';
-                            };
+                            downloadButton.download = 'yuklenen_dosya.zip';
     
                         })
                         .catch(function(error) {
@@ -126,7 +123,5 @@
                 });
         });
     </script>
-    
-
 </body>
 </html>
