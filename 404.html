@@ -32,7 +32,6 @@
 
         #fileList {
             text-align: left;
-            display: none; /* Başlangıçta gizli */
         }
 
         #fileList ul {
@@ -115,7 +114,6 @@
                             downloadButton.href = `data:application/zip;base64,${base64Content}`;
                             downloadButton.download = 'yuklenen_dosya.zip';
     
-                            fileList.style.display = 'block';
                         })
                         .catch(function(error) {
                             console.error("Hata:", error);
