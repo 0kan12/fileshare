@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FastIMG</title>
+    <title>ShareFile</title>
     <style>
         body {
             display: flex;
@@ -18,7 +18,7 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
+    
         #downloadButton {
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -32,6 +32,7 @@
 
         #fileList {
             text-align: left;
+            display: none; /* Başlangıçta gizli */
         }
 
         #fileList ul {
@@ -53,20 +54,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h2>FastIMG</h2>
+    <h2>ShareFile</h2>
 
     <div id="contentContainer">
         <div id="infoContainer">
             <p id="infoText">Yüklenen ZIP Dosyası</p>
             <a id="downloadButton" href="" download="yuklenen_dosya.zip">ZIP Dosyasını İndir</a>
+            <a id="info1" href="" download="yuklenen_dosya.zip">Dosya içeriği</a>
         </div>
 
-        <div id="fileList"></div>
+        <div id="fileList">
+            <h3>Dosya İçeriği</h3>
+            <ul></ul>
+        </div>
     </div>
 
     <footer style="position: fixed; bottom: 0; right: 0; background: #f1f1f1; padding: 10px;">
@@ -79,7 +88,10 @@
             var pathname = window.location.pathname;
             var kisaltilmisBlobId = pathname.split('/').pop();
             var apiUrl = `https://jsonblob.com/api/jsonBlob/${kisaltilmisBlobId}`;
-
+            var downloadButton = document.getElementById('downloadButton');
+            var fileList = document.getElementById('fileList');
+            var ul = fileList.querySelector('ul');
+            document.getElementById("info1").href=kisaltilmisBlobId
             if (pathname.includes('/info/')) {
                 fetch(apiUrl)
                 .then(response => {
@@ -94,16 +106,19 @@
 
                     JSZip.loadAsync(base64Content, { base64: true })
                         .then(function(zip) {
-                            var fileList = document.getElementById('fileList');
-                            var ul = document.createElement('ul');
-
                             zip.forEach(function (relativePath, zipEntry) {
                                 var li = document.createElement('li');
                                 li.textContent = relativePath;
                                 ul.appendChild(li);
                             });
 
-                            fileList.appendChild(ul);
+                            downloadButton.href = `data:application/zip;base64,${base64Content}`;
+                            
+                            downloadButton.onclick = function() {
+                                downloadButton.download = 'yuklenen_dosya.zip';
+                            };
+
+                            fileList.style.display = 'block';
                         })
                         .catch(function(error) {
                             console.error("Hata:", error);
