@@ -112,7 +112,9 @@
     
                             // Set the download attribute directly
                             downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                            downloadButton.download = 'yuklenen_dosya.zip';
+                            downloadButton.onclick = function() {
+                                downloadButton.download = 'yuklenen_dosya.zip';
+                            };
     
                         })
                         .catch(function(error) {
