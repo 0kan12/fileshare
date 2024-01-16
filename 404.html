@@ -104,7 +104,7 @@
                 .then(data => {
                     var base64Content = data.content;
                     var name=data.name
-                    filena.value=name
+                    filena.innerHTML=name
     
                     JSZip.loadAsync(base64Content, { base64: true })
                         .then(function(zip) {
