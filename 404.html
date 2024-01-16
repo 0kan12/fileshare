@@ -65,7 +65,7 @@
 <body>
 
     <h2>ShareFile</h2>
-
+    <h3 id="filename"></h3>
     <div id="contentContainer">
         <div id="infoContainer">
             <p id="infoText">Yüklenen ZIP Dosyası</p>
@@ -91,6 +91,7 @@
             var downloadButton = document.getElementById('downloadButton');
             var fileList = document.getElementById('fileList');
             var ul = fileList.querySelector('ul');
+            var filena=document.getElementById("filename")
     
             fetch(apiUrl)
                 .then(response => {
@@ -102,6 +103,8 @@
                 })
                 .then(data => {
                     var base64Content = data.content;
+                    var name=data.name
+                    filena.value=name
     
                     JSZip.loadAsync(base64Content, { base64: true })
                         .then(function(zip) {
@@ -126,7 +129,7 @@
                             Promise.all(promises)
                                 .then(function() {
                                     downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                                    downloadButton.download = 'yuklenen_dosya.zip';
+                                    downloadButton.download = name+"zip";
                                 })
                                 .catch(function(error) {
                                     console.error("Hata:", error);
