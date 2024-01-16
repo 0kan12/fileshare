@@ -129,7 +129,7 @@
                             Promise.all(promises)
                                 .then(function() {
                                     downloadButton.href = `data:application/zip;base64,${base64Content}`;
-                                    downloadButton.download = name+"zip";
+                                    downloadButton.download = name;
                                 })
                                 .catch(function(error) {
                                     console.error("Hata:", error);
