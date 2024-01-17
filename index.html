@@ -43,6 +43,7 @@
     }
 
     #result {
+        display: none;
         font-family: "RaleWay",sans-serif;
         margin-top: 20px;
         padding: 10px;
@@ -158,6 +159,7 @@
             resultElement.innerHTML = 'Dosya başarıyla yüklendi. <br> Linkiniz: <a href="https://sharefile.dvtfl.xyz/' + blobId + '" target="_blank">https://sharefile.dvtfl.xyz/' + blobId + '</a> <br>';
             resultElement.innerHTML +="QrCode oluşturmak için : <a target='_blank' href=https://qrgen.dvtfl.xyz?data=https://sharefile.dvtfl.xyz/"+blobId+">Tıklayın</a>"
             resultElement.innerHTML += '<br> Linki kopyalamak için "Linki Kopyala" butonunu kullanabilirsiniz.';
+            resultElement.style.display="none";
             document.getElementById('copyButton').style.display = 'block';
             document.getElementById('loadingLabel').style.display = 'none';
         }
